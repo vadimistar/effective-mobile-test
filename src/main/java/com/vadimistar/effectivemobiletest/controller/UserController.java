@@ -1,5 +1,7 @@
 package com.vadimistar.effectivemobiletest.controller;
 
+import com.vadimistar.effectivemobiletest.dto.JwtDto;
+import com.vadimistar.effectivemobiletest.dto.LoginUserDto;
 import com.vadimistar.effectivemobiletest.dto.RegisterUserDto;
 import com.vadimistar.effectivemobiletest.dto.UserDto;
 import com.vadimistar.effectivemobiletest.service.UserService;
@@ -18,5 +20,10 @@ public class UserController {
     @PostMapping("/user")
     public UserDto registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
         return userService.registerUser(registerUserDto);
+    }
+
+    @PostMapping("/auth/login")
+    public JwtDto loginUser(@Valid @RequestBody LoginUserDto loginUserDto) {
+        return userService.loginUser(loginUserDto);
     }
 }
