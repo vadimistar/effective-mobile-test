@@ -2,6 +2,7 @@ package com.vadimistar.effectivemobiletest.controller.advice;
 
 import com.vadimistar.effectivemobiletest.dto.ErrorDto;
 import com.vadimistar.effectivemobiletest.exception.EmailAlreadyExistsException;
+import com.vadimistar.effectivemobiletest.exception.TaskNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,12 @@ public class ControllerAdviceImpl {
     public ResponseEntity<ErrorDto> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
         ErrorDto errorDto = new ErrorDto(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDto);
+    }
+
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleTaskNotFoundException(TaskNotFoundException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDto);
     }
 
     @ExceptionHandler(Exception.class)
