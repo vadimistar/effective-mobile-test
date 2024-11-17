@@ -23,4 +23,13 @@ public class AdminTaskServiceImpl implements AdminTaskService {
 
         return adminTaskMapper.mapTaskToAdminTaskDto(task);
     }
+
+    @Override
+    public AdminTaskDto deleteTask(long taskId) {
+        AdminTaskDto adminTaskDto = getTask(taskId);
+
+        taskRepository.deleteById(taskId);
+
+        return adminTaskDto;
+    }
 }
