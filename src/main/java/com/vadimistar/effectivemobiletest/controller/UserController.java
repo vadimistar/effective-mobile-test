@@ -1,15 +1,19 @@
 package com.vadimistar.effectivemobiletest.controller;
 
 import com.vadimistar.effectivemobiletest.dto.*;
+import com.vadimistar.effectivemobiletest.entity.User;
 import com.vadimistar.effectivemobiletest.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,5 +60,23 @@ public class UserController {
     @PostMapping("/auth/login")
     public JwtDto loginUser(@Valid @RequestBody LoginUserDto loginUserDto) {
         return userService.loginUser(loginUserDto);
+    }
+
+    @Operation(summary = "Идентификация пользователя")
+    @SecurityRequirement(name = "JWT")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                    @Content(schema = @Schema(implementation = UserDto.class), mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "403", description = "Пользователь не авторизован, или неверный токен", content = {
+                    @Content(schema = @Schema(implementation = JwtDto.class), mediaType = "application/json")
+            }),
+            @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
+                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
+            }),
+    })
+    @GetMapping("/user")
+    public UserDto getUser(@AuthenticationPrincipal User user) {
+        return userService.getUser(user);
     }
 }

@@ -50,4 +50,9 @@ public class UserServiceImpl implements UserService {
         SecurityContextHolder.getContext().setAuthentication(auth);
         return jwtService.createToken(auth);
     }
+
+    @Override
+    public UserDto getUser(User user) {
+        return userMapper.mapUserToUserDto(user);
+    }
 }
