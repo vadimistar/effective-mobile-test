@@ -1,6 +1,7 @@
 package com.vadimistar.effectivemobiletest.controller;
 
 import com.vadimistar.effectivemobiletest.dto.TaskDto;
+import com.vadimistar.effectivemobiletest.dto.UpdateTaskDto;
 import com.vadimistar.effectivemobiletest.entity.User;
 import com.vadimistar.effectivemobiletest.service.TaskService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,5 +26,12 @@ public class TaskController {
     @GetMapping("/tasks")
     public List<TaskDto> getTasks(@AuthenticationPrincipal User user) {
         return taskService.getTasks(user);
+    }
+
+    @PatchMapping("/task/{id}")
+    public TaskDto updateTask(@AuthenticationPrincipal User user,
+                              @PathVariable long id,
+                              @RequestBody UpdateTaskDto updateTaskDto) {
+        return taskService.updateTask(user, id, updateTaskDto);
     }
 }

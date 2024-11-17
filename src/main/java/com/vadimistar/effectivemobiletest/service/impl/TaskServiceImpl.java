@@ -1,6 +1,7 @@
 package com.vadimistar.effectivemobiletest.service.impl;
 
 import com.vadimistar.effectivemobiletest.dto.TaskDto;
+import com.vadimistar.effectivemobiletest.dto.UpdateTaskDto;
 import com.vadimistar.effectivemobiletest.entity.Task;
 import com.vadimistar.effectivemobiletest.entity.User;
 import com.vadimistar.effectivemobiletest.exception.TaskNotFoundException;
@@ -34,5 +35,16 @@ public class TaskServiceImpl implements TaskService {
         return tasks.stream()
                 .map(taskMapper::mapTaskToTaskDto)
                 .toList();
+    }
+
+    @Override
+    public TaskDto updateTask(User user, long taskId, UpdateTaskDto updateTaskDto) {
+        Task task = taskRepository.findByIdAndPerformerId(taskId, user.getId())
+                .orElseThrow(() -> new TaskNotFoundException("Task with this id is not found: " + taskId));
+
+        taskMapper.updateTask(task, updateTaskDto);
+        taskRepository.saveAndFlush(task);
+
+        return taskMapper.mapTaskToTaskDto(task);
     }
 }
