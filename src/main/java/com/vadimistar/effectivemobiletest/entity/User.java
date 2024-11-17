@@ -1,5 +1,6 @@
 package com.vadimistar.effectivemobiletest.entity;
 
+import com.vadimistar.effectivemobiletest.entity.domain.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
