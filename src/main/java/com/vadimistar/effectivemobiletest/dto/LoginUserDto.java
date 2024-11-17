@@ -8,9 +8,9 @@ import lombok.Data;
 @Builder
 public class LoginUserDto {
 
-    @NotBlank(message = "Email cannot be blank")
+    @NotBlank(message = "Email не может быть пустым")
     private String email;
 
-    @NotBlank(message = "Password cannot be blank")
+    @NotBlank(message = "Пароль не может быть пустым")
     private String password;
 }

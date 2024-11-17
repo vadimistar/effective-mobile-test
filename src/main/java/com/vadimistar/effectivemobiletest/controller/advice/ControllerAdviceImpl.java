@@ -34,7 +34,7 @@ public class ControllerAdviceImpl {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleException(Exception e) {
         log.error("Exception occurred ({}): {}", e.getClass().toString(), e.getMessage());
-        ErrorDto errorDto = new ErrorDto("Internal server error");
+        ErrorDto errorDto = new ErrorDto("Внутренняя ошибка сервера");
         return ResponseEntity.internalServerError().body(errorDto);
     }
 }

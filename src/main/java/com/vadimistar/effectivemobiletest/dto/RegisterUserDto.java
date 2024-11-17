@@ -10,11 +10,11 @@ import lombok.Data;
 @Builder
 public class RegisterUserDto {
 
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Email is invalid")
+    @NotBlank(message = "Email не может быть пустым")
+    @Email(message = "Неверный email")
     private String email;
 
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 4, message = "Password must contain at least 4 characters")
+    @NotBlank(message = "Пароль не может быть пустым")
+    @Size(min = 4, message = "Пароль не может быть меньше 4 символов")
     private String password;
 }
