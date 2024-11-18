@@ -29,7 +29,7 @@ public class AdminTaskServiceImpl implements AdminTaskService {
     @Override
     public AdminTaskDto getTask(long taskId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException("Task with this id is not found: " + taskId));
+                .orElseThrow(() -> new TaskNotFoundException("Задача с этим ID не найдена: " + taskId));
 
         return adminTaskMapper.mapTaskToAdminTaskDto(task);
     }
@@ -62,7 +62,7 @@ public class AdminTaskServiceImpl implements AdminTaskService {
     @Override
     public AdminTaskDto updateTask(long taskId, AdminUpdateTaskDto adminUpdateTaskDto) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException("Task with this id is not found: " + taskId));
+                .orElseThrow(() -> new TaskNotFoundException("Задача с этим ID не найдена: " + taskId));
 
         adminTaskMapper.updateTask(task, adminUpdateTaskDto);
         updateTaskPerformer(adminUpdateTaskDto.getPerformerId(), task);
