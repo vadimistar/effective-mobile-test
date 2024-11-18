@@ -1,10 +1,13 @@
 package com.vadimistar.effectivemobiletest.controller;
 
 import com.vadimistar.effectivemobiletest.dto.AdminTaskDto;
+import com.vadimistar.effectivemobiletest.dto.AdminGetTasksDto;
 import com.vadimistar.effectivemobiletest.service.AdminTaskService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,6 +20,11 @@ public class AdminTaskController {
     @GetMapping("/task/{id}")
     public AdminTaskDto getTask(@PathVariable long id) {
         return adminTaskService.getTask(id);
+    }
+
+    @GetMapping("/tasks")
+    public List<AdminTaskDto> getTasks(AdminGetTasksDto adminGetTasksDto) {
+        return adminTaskService.getTasks(adminGetTasksDto);
     }
 
     @DeleteMapping("/task/{id}")
