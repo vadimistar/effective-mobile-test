@@ -5,6 +5,7 @@ import com.vadimistar.effectivemobiletest.dto.UpdateTaskDto;
 import com.vadimistar.effectivemobiletest.entity.User;
 import com.vadimistar.effectivemobiletest.service.TaskService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class TaskController {
     @PatchMapping("/task/{id}")
     public TaskDto updateTask(@AuthenticationPrincipal User user,
                               @PathVariable long id,
-                              @RequestBody UpdateTaskDto updateTaskDto) {
+                              @Valid @RequestBody UpdateTaskDto updateTaskDto) {
         return taskService.updateTask(user, id, updateTaskDto);
     }
 }
