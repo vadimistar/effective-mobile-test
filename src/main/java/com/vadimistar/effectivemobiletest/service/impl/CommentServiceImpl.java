@@ -27,14 +27,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDto> getComments(User user, long taskId, Pageable pageable) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new InvalidTaskIdException("Неверный ID задачи: " + taskId));
+        Task task = getTask(user, taskId);
 
-        if (task.getPerformer() == null || !Objects.equals(task.getPerformer().getId(), user.getId())) {
-            throw new InvalidTaskIdException("Неверный ID задачи: " + taskId);
-        }
-
-        List<Comment> comments = commentRepository.findByTaskId(taskId, pageable);
+        List<Comment> comments = commentRepository.findByTaskId(task.getId(), pageable);
 
         return comments.stream()
                 .map(commentMapper::mapCommentToCommentDto)
@@ -43,12 +38,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto createComment(User user, long taskId, CreateCommentDto createCommentDto) {
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new InvalidTaskIdException("Неверный ID задачи: " + taskId));
-
-        if (task.getPerformer() == null || !Objects.equals(task.getPerformer().getId(), user.getId())) {
-            throw new InvalidTaskIdException("Неверный ID задачи: " + taskId);
-        }
+        Task task = getTask(user, taskId);
 
         Comment comment = commentMapper.mapCreateCommentDtoToComment(createCommentDto);
         comment.setAuthor(user);
@@ -57,5 +47,16 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.saveAndFlush(comment);
 
         return commentMapper.mapCommentToCommentDto(comment);
+    }
+
+    private Task getTask(User performer, long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new InvalidTaskIdException("Неверный ID задачи: " + id));
+
+        if (task.getPerformer() == null || !Objects.equals(task.getPerformer().getId(), performer.getId())) {
+            throw new InvalidTaskIdException("Неверный ID задачи: " + id);
+        }
+
+        return task;
     }
 }
