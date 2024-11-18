@@ -3,6 +3,7 @@ package com.vadimistar.effectivemobiletest.controller;
 import com.vadimistar.effectivemobiletest.dto.AdminCreateTaskDto;
 import com.vadimistar.effectivemobiletest.dto.AdminTaskDto;
 import com.vadimistar.effectivemobiletest.dto.AdminGetTasksDto;
+import com.vadimistar.effectivemobiletest.dto.AdminUpdateTaskDto;
 import com.vadimistar.effectivemobiletest.entity.User;
 import com.vadimistar.effectivemobiletest.service.AdminTaskService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -35,6 +36,12 @@ public class AdminTaskController {
     public AdminTaskDto createTask(@AuthenticationPrincipal User user,
                                    @Valid @RequestBody AdminCreateTaskDto adminCreateTaskDto) {
         return adminTaskService.createTask(user, adminCreateTaskDto);
+    }
+
+    @PatchMapping("/task/{id}")
+    public AdminTaskDto updateTask(@PathVariable long id,
+                                   @Valid @RequestBody AdminUpdateTaskDto adminUpdateTaskDto) {
+        return adminTaskService.updateTask(id, adminUpdateTaskDto);
     }
 
     @DeleteMapping("/task/{id}")

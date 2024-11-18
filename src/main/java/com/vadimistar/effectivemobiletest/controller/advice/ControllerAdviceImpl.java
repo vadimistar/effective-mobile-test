@@ -1,10 +1,7 @@
 package com.vadimistar.effectivemobiletest.controller.advice;
 
 import com.vadimistar.effectivemobiletest.dto.ErrorDto;
-import com.vadimistar.effectivemobiletest.exception.EmailAlreadyExistsException;
-import com.vadimistar.effectivemobiletest.exception.InvalidPerformerIdException;
-import com.vadimistar.effectivemobiletest.exception.InvalidStatusException;
-import com.vadimistar.effectivemobiletest.exception.TaskNotFoundException;
+import com.vadimistar.effectivemobiletest.exception.*;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -63,7 +60,7 @@ public class ControllerAdviceImpl {
         if (e.getCause() != null && e.getCause().getCause() != null) {
             Throwable cause = e.getCause().getCause();
 
-            if (cause instanceof InvalidStatusException) {
+            if (cause instanceof InvalidStatusException || cause instanceof InvalidPriorityException) {
                 ErrorDto errorDto = new ErrorDto(cause.getMessage());
                 return ResponseEntity.badRequest().body(errorDto);
             }
