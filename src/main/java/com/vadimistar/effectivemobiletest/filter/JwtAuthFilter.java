@@ -37,6 +37,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (!jwtService.isTokenValid(token.get())) {
             log.error("Auth failed: token is not valid");
+            filterChain.doFilter(request, response);
             return;
         }
 
