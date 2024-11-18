@@ -30,7 +30,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Регистрация прошла успешно", content = {
                     @Content(schema = @Schema(implementation = UserDto.class), mediaType = "application/json")
             }),
-            @ApiResponse(responseCode = "400", description = "Неверный формат запроса", content = {
+            @ApiResponse(responseCode = "400", description = "Неверный запрос", content = {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
             @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
@@ -50,7 +50,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Авторизация прошла успешно", content = {
                     @Content(schema = @Schema(implementation = JwtDto.class), mediaType = "application/json")
             }),
-            @ApiResponse(responseCode = "400", description = "Неверный формат запроса", content = {
+            @ApiResponse(responseCode = "400", description = "Неверный запрос", content = {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
             @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
