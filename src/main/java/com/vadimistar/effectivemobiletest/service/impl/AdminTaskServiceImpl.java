@@ -13,6 +13,7 @@ import com.vadimistar.effectivemobiletest.repository.TaskRepository;
 import com.vadimistar.effectivemobiletest.repository.UserRepository;
 import com.vadimistar.effectivemobiletest.service.AdminTaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,10 +35,12 @@ public class AdminTaskServiceImpl implements AdminTaskService {
     }
 
     @Override
-    public List<AdminTaskDto> getTasks(AdminGetTasksDto adminGetTasksDto) {
+    public List<AdminTaskDto> getTasks(AdminGetTasksDto adminGetTasksDto, Pageable pageable) {
         List<Task> tasks = taskRepository.findByCreatorIdAndPerformerId(
                 adminGetTasksDto.getCreatorId(),
-                adminGetTasksDto.getPerformerId());
+                adminGetTasksDto.getPerformerId(),
+                pageable
+        );
 
         return tasks.stream()
                 .map(adminTaskMapper::mapTaskToAdminTaskDto)

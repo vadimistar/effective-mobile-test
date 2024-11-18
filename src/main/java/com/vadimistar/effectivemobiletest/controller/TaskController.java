@@ -7,6 +7,7 @@ import com.vadimistar.effectivemobiletest.service.TaskService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +26,8 @@ public class TaskController {
     }
 
     @GetMapping("/tasks")
-    public List<TaskDto> getTasks(@AuthenticationPrincipal User user) {
-        return taskService.getTasks(user);
+    public List<TaskDto> getTasks(@AuthenticationPrincipal User user, Pageable pageable) {
+        return taskService.getTasks(user, pageable);
     }
 
     @PatchMapping("/task/{id}")

@@ -9,6 +9,7 @@ import com.vadimistar.effectivemobiletest.mapper.TaskMapper;
 import com.vadimistar.effectivemobiletest.repository.TaskRepository;
 import com.vadimistar.effectivemobiletest.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +30,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDto> getTasks(User user) {
-        List<Task> tasks = taskRepository.findByPerformerId(user.getId());
+    public List<TaskDto> getTasks(User user, Pageable pageable) {
+        List<Task> tasks = taskRepository.findByPerformerId(user.getId(), pageable);
 
         return tasks.stream()
                 .map(taskMapper::mapTaskToTaskDto)

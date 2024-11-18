@@ -9,6 +9,7 @@ import com.vadimistar.effectivemobiletest.service.AdminTaskService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +29,8 @@ public class AdminTaskController {
     }
 
     @GetMapping("/tasks")
-    public List<AdminTaskDto> getTasks(AdminGetTasksDto adminGetTasksDto) {
-        return adminTaskService.getTasks(adminGetTasksDto);
+    public List<AdminTaskDto> getTasks(AdminGetTasksDto adminGetTasksDto, Pageable pageable) {
+        return adminTaskService.getTasks(adminGetTasksDto, pageable);
     }
 
     @PostMapping("/task")
