@@ -2,6 +2,7 @@ package com.vadimistar.effectivemobiletest.controller.advice;
 
 import com.vadimistar.effectivemobiletest.dto.ErrorDto;
 import com.vadimistar.effectivemobiletest.exception.EmailAlreadyExistsException;
+import com.vadimistar.effectivemobiletest.exception.InvalidPerformerIdException;
 import com.vadimistar.effectivemobiletest.exception.InvalidStatusException;
 import com.vadimistar.effectivemobiletest.exception.TaskNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -49,6 +50,12 @@ public class ControllerAdviceImpl {
     public ResponseEntity<ErrorDto> handleTaskNotFoundException(TaskNotFoundException e) {
         ErrorDto errorDto = new ErrorDto(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDto);
+    }
+
+    @ExceptionHandler(InvalidPerformerIdException.class)
+    public ResponseEntity<ErrorDto> handleInvalidPerformerIdException(InvalidPerformerIdException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDto);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

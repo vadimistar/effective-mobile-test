@@ -1,11 +1,15 @@
 package com.vadimistar.effectivemobiletest.service.impl;
 
+import com.vadimistar.effectivemobiletest.dto.AdminCreateTaskDto;
 import com.vadimistar.effectivemobiletest.dto.AdminGetTasksDto;
 import com.vadimistar.effectivemobiletest.dto.AdminTaskDto;
 import com.vadimistar.effectivemobiletest.entity.Task;
+import com.vadimistar.effectivemobiletest.entity.User;
+import com.vadimistar.effectivemobiletest.exception.InvalidPerformerIdException;
 import com.vadimistar.effectivemobiletest.exception.TaskNotFoundException;
 import com.vadimistar.effectivemobiletest.mapper.AdminTaskMapper;
 import com.vadimistar.effectivemobiletest.repository.TaskRepository;
+import com.vadimistar.effectivemobiletest.repository.UserRepository;
 import com.vadimistar.effectivemobiletest.service.AdminTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ public class AdminTaskServiceImpl implements AdminTaskService {
 
     private final TaskRepository taskRepository;
     private final AdminTaskMapper adminTaskMapper;
+    private final UserRepository userRepository;
 
     @Override
     public AdminTaskDto getTask(long taskId) {
@@ -36,6 +41,25 @@ public class AdminTaskServiceImpl implements AdminTaskService {
         return tasks.stream()
                 .map(adminTaskMapper::mapTaskToAdminTaskDto)
                 .toList();
+    }
+
+    @Override
+    public AdminTaskDto createTask(User user, AdminCreateTaskDto adminCreateTaskDto) {
+        Task task = adminTaskMapper.mapAdminCreateTaskDtoToTask(adminCreateTaskDto);
+        task.setCreator(user);
+
+        if (adminCreateTaskDto.getPerformerId() != null) {
+            User performer = userRepository.findById(adminCreateTaskDto.getPerformerId())
+                    .orElseThrow(() -> new InvalidPerformerIdException(
+                            "Invalid performer id: " + adminCreateTaskDto.getPerformerId()
+                    ));
+
+            task.setPerformer(performer);
+        }
+
+        task = taskRepository.saveAndFlush(task);
+
+        return adminTaskMapper.mapTaskToAdminTaskDto(task);
     }
 
     @Override
