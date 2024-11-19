@@ -40,7 +40,7 @@ public class TaskController {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
             @ApiResponse(responseCode = "401", description = "Пользователь не авторизован, или неверный токен", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
+                    @Content()
             }),
             @ApiResponse(responseCode = "404", description = "Задание не найдено", content = {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
@@ -66,7 +66,7 @@ public class TaskController {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
             @ApiResponse(responseCode = "401", description = "Пользователь не авторизован, или неверный токен", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
+                    @Content()
             }),
             @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
@@ -88,7 +88,7 @@ public class TaskController {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
             @ApiResponse(responseCode = "401", description = "Пользователь не авторизован, или неверный токен", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
+                    @Content()
             }),
             @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
