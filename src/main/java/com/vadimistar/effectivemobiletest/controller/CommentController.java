@@ -2,7 +2,6 @@ package com.vadimistar.effectivemobiletest.controller;
 
 import com.vadimistar.effectivemobiletest.dto.CommentDto;
 import com.vadimistar.effectivemobiletest.dto.CreateCommentDto;
-import com.vadimistar.effectivemobiletest.dto.ErrorDto;
 import com.vadimistar.effectivemobiletest.entity.User;
 import com.vadimistar.effectivemobiletest.service.CommentService;
 import com.vadimistar.effectivemobiletest.util.PageableParameter;
@@ -38,15 +37,6 @@ public class CommentController {
                             schema = @Schema(implementation = CommentDto.class)
                     ), mediaType = "application/json")
             }),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
-            }),
-            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован, или неверный токен", content = {
-                    @Content()
-            }),
-            @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
-            }),
     })
     @PageableParameter
     @GetMapping("/task/{taskId}/comments")
@@ -60,15 +50,6 @@ public class CommentController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Комментарий, который написал пользователь", content = {
                     @Content(schema = @Schema(implementation = CommentDto.class), mediaType = "application/json")
-            }),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
-            }),
-            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован, или неверный токен", content = {
-                    @Content()
-            }),
-            @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
     })
     @PostMapping("/task/{taskId}/comment")

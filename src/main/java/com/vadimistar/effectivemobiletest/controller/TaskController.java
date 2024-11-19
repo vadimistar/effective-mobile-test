@@ -36,16 +36,7 @@ public class TaskController {
             @ApiResponse(responseCode = "200", description = "Задание", content = {
                     @Content(schema = @Schema(implementation = TaskDto.class), mediaType = "application/json")
             }),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
-            }),
-            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован, или неверный токен", content = {
-                    @Content()
-            }),
             @ApiResponse(responseCode = "404", description = "Задание не найдено", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
-            }),
-            @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
     })
@@ -62,15 +53,6 @@ public class TaskController {
                             schema = @Schema(implementation = TaskDto.class)
                     ), mediaType = "application/json")
             }),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
-            }),
-            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован, или неверный токен", content = {
-                    @Content()
-            }),
-            @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
-            }),
     })
     @PageableParameter
     @GetMapping("/tasks")
@@ -83,15 +65,6 @@ public class TaskController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Обновленное задание", content = {
                     @Content(schema = @Schema(implementation = TaskDto.class), mediaType = "application/json")
-            }),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
-            }),
-            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован, или неверный токен", content = {
-                    @Content()
-            }),
-            @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
     })
     @PatchMapping("/task/{id}")

@@ -68,12 +68,6 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "OK", content = {
                     @Content(schema = @Schema(implementation = UserDto.class), mediaType = "application/json")
             }),
-            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован, или неверный токен", content = {
-                    @Content()
-            }),
-            @ApiResponse(responseCode = "405", description = "Внутренняя ошибка сервера", content = {
-                    @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
-            }),
     })
     @GetMapping("/user")
     public UserDto getUser(@AuthenticationPrincipal User user) {
