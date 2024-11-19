@@ -13,5 +13,5 @@ public class JwtDto {
     private String token;
 
     @Schema(description = "Время в секундах, в течение которого токен будет валиден")
-    private int expiresInSeconds;
+    private long expiresInSeconds;
 }

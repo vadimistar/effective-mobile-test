@@ -1,10 +1,12 @@
 package com.vadimistar.effectivemobiletest.service.impl;
 
+import com.vadimistar.effectivemobiletest.config.JwtConfig;
 import com.vadimistar.effectivemobiletest.dto.JwtDto;
 import com.vadimistar.effectivemobiletest.service.JwtService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,15 +16,18 @@ import java.security.Key;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 @Log4j2
 public class JwtServiceImpl implements JwtService {
+
+    private final JwtConfig jwtConfig;
 
     @Override
     public JwtDto createToken(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         Date now = new Date();
-        Date expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000); // todo: move to config
+        Date expiresAt = new Date(now.getTime() + jwtConfig.getExpiresIn().toMillis());
 
         String token = Jwts.builder()
                 .setSubject(userDetails.getUsername())
@@ -33,7 +38,7 @@ public class JwtServiceImpl implements JwtService {
 
         return JwtDto.builder()
                 .token(token)
-                .expiresInSeconds(24 * 60 * 60 * 1000)
+                .expiresInSeconds(jwtConfig.getExpiresIn().toSeconds())
                 .build();
     }
 
@@ -65,8 +70,8 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Key getKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)); // todo: move to config
+        return Keys.hmacShaKeyFor(
+                Decoders.BASE64.decode(jwtConfig.getSecret())
+        );
     }
-
-    private static final String SECRET_KEY = "123456789012345678901234567890123456789012345678901234567890";
 }
