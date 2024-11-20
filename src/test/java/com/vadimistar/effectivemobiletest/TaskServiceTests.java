@@ -4,13 +4,13 @@ import com.vadimistar.effectivemobiletest.dto.TaskDto;
 import com.vadimistar.effectivemobiletest.dto.UpdateTaskDto;
 import com.vadimistar.effectivemobiletest.entity.Task;
 import com.vadimistar.effectivemobiletest.entity.User;
-import com.vadimistar.effectivemobiletest.entity.domain.Priority;
 import com.vadimistar.effectivemobiletest.entity.domain.Status;
 import com.vadimistar.effectivemobiletest.exception.TaskNotFoundException;
 import com.vadimistar.effectivemobiletest.mapper.TaskMapper;
 import com.vadimistar.effectivemobiletest.repository.TaskRepository;
 import com.vadimistar.effectivemobiletest.repository.UserRepository;
 import com.vadimistar.effectivemobiletest.service.TaskService;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +24,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
+
+import static com.vadimistar.effectivemobiletest.TestUtils.*;
 
 @SpringBootTest
 @Testcontainers
@@ -42,16 +44,16 @@ public class TaskServiceTests {
     private TaskMapper taskMapper;
 
     @Container
-    private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("em-test-db");
+    private static final MySQLContainer<?> mysqlContainer = createMySQLContainer();
+
+    @AfterAll
+    public static void cleanUp() {
+        mysqlContainer.close();
+    }
 
     @DynamicPropertySource
     public static void mysqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mysqlContainer::getUsername);
-        registry.add("spring.datasource.password", mysqlContainer::getPassword);
-        registry.add("spring.datasource.driverClassName", mysqlContainer::getDriverClassName);
-        registry.add("spring.flyway.enabled", () -> true);
+        fillMySQLProperties(registry, mysqlContainer);
     }
 
     @BeforeEach
@@ -62,25 +64,33 @@ public class TaskServiceTests {
 
     @Test
     public void getTask_invalidTaskId_throwsTaskNotFoundException() {
-        User user = createUser();
+        User user = createTestUser();
+
+        userRepository.saveAndFlush(user);
 
         Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.getTask(user, 1));
     }
 
     @Test
     public void getTask_userNotPerformsTask_throwsTaskNotFoundException() {
-        User user = createUser();
-        Task task = createTask(user, null);
+        User user = createTestUser();
+        Task task = createTestTask(user, null);
+
+        userRepository.saveAndFlush(user);
+        taskRepository.saveAndFlush(task);
 
         Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.getTask(user, task.getId()));
     }
 
     @Test
     public void getTask_userPerformsTask_returnsTask() {
-        User creator = createUser("creator@email");
-        User performer = createUser("performer@email");
+        User creator = createTestUser();
+        User performer = createTestUser();
+        Task task = createTestTask(creator, performer);
 
-        Task task = createTask(creator, performer);
+        userRepository.saveAndFlush(creator);
+        userRepository.saveAndFlush(performer);
+        taskRepository.saveAndFlush(task);
 
         TaskDto expected = taskMapper.mapTaskToTaskDto(task);
 
@@ -88,17 +98,24 @@ public class TaskServiceTests {
     }
 
     @Test
-    public void getTasks_createSomeTasks_returnsOnlyPerformedTasks() {
-        User creator = createUser("creator@email");
-        User performer = createUser("performer@email");
+    public void getTasks_createTasks_returnsOnlyPerformedTasks() {
+        User creator = createTestUser();
+        User performer = createTestUser();
 
-        createTask(creator, creator);
-        createTask(creator, creator);
-
-        List<Task> performedTasks = List.of(
-                createTask(creator, performer),
-                createTask(creator, performer)
+        List<Task> notPerformedTasks = List.of(
+                createTestTask(creator, creator),
+                createTestTask(creator, creator)
         );
+        List<Task> performedTasks = List.of(
+                createTestTask(creator, performer),
+                createTestTask(creator, performer)
+        );
+
+        userRepository.saveAndFlush(creator);
+        userRepository.saveAndFlush(performer);
+
+        taskRepository.saveAllAndFlush(notPerformedTasks);
+        taskRepository.saveAllAndFlush(performedTasks);
 
         List<TaskDto> expected = performedTasks.stream()
                 .map(taskMapper::mapTaskToTaskDto)
@@ -109,7 +126,9 @@ public class TaskServiceTests {
 
     @Test
     public void updateTask_invalidTaskId_throwsTaskNotFoundException() {
-        User user = createUser();
+        User user = createTestUser();
+
+        userRepository.saveAndFlush(user);
 
         Assertions.assertThrows(
                 TaskNotFoundException.class,
@@ -121,9 +140,11 @@ public class TaskServiceTests {
 
     @Test
     public void updateTask_newStatus_returnsTaskWithNewStatus() {
-        User user = createUser();
+        User user = createTestUser();
+        Task task = createTestTask(user, user);
 
-        Task task = createTask(user, user);
+        userRepository.saveAndFlush(user);
+        taskRepository.saveAndFlush(task);
 
         TaskDto expected = taskMapper.mapTaskToTaskDto(task);
         expected.setStatus(Status.DONE);
@@ -134,35 +155,5 @@ public class TaskServiceTests {
                         .status(Status.DONE)
                         .build())
         );
-    }
-
-    private User createUser() {
-        return createUser("user@user");
-    }
-
-    private User createUser(String email) {
-        User user = User.builder()
-                .email(email)
-                .password("1234")
-                .build();
-
-        userRepository.saveAndFlush(user);
-
-        return user;
-    }
-
-    private Task createTask(User creator, User performer) {
-        Task task = Task.builder()
-                .title("Task title")
-                .description("Task description")
-                .status(Status.PENDING)
-                .priority(Priority.HIGH)
-                .creator(creator)
-                .performer(performer)
-                .build();
-
-        taskRepository.saveAndFlush(task);
-
-        return task;
     }
 }

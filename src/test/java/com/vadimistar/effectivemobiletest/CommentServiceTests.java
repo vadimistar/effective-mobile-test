@@ -5,8 +5,6 @@ import com.vadimistar.effectivemobiletest.dto.CreateCommentDto;
 import com.vadimistar.effectivemobiletest.entity.Comment;
 import com.vadimistar.effectivemobiletest.entity.Task;
 import com.vadimistar.effectivemobiletest.entity.User;
-import com.vadimistar.effectivemobiletest.entity.domain.Priority;
-import com.vadimistar.effectivemobiletest.entity.domain.Status;
 import com.vadimistar.effectivemobiletest.exception.InvalidTaskIdException;
 import com.vadimistar.effectivemobiletest.mapper.CommentMapper;
 import com.vadimistar.effectivemobiletest.repository.CommentRepository;
@@ -14,6 +12,7 @@ import com.vadimistar.effectivemobiletest.repository.TaskRepository;
 import com.vadimistar.effectivemobiletest.repository.UserRepository;
 import com.vadimistar.effectivemobiletest.service.CommentService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
-import java.util.UUID;
+
+import static com.vadimistar.effectivemobiletest.TestUtils.*;
 
 @SpringBootTest
 @Testcontainers
@@ -49,16 +49,16 @@ public class CommentServiceTests {
     private CommentMapper commentMapper;
 
     @Container
-    private static final MySQLContainer<?> mysqlContainer = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("em-test-db");
+    private static final MySQLContainer<?> mysqlContainer = createMySQLContainer();
+
+    @AfterAll
+    public static void cleanUp() {
+        mysqlContainer.close();
+    }
 
     @DynamicPropertySource
     public static void mysqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mysqlContainer::getUsername);
-        registry.add("spring.datasource.password", mysqlContainer::getPassword);
-        registry.add("spring.datasource.driverClassName", mysqlContainer::getDriverClassName);
-        registry.add("spring.flyway.enabled", () -> true);
+        fillMySQLProperties(registry, mysqlContainer);
     }
 
     @BeforeEach
@@ -70,7 +70,9 @@ public class CommentServiceTests {
 
     @Test
     public void getComments_invalidTaskId_throwsInvalidTaskIdException() {
-        User user = createUser();
+        User user = createTestUser();
+
+        userRepository.saveAndFlush(user);
 
         Assertions.assertThrows(
                 InvalidTaskIdException.class,
@@ -80,8 +82,11 @@ public class CommentServiceTests {
 
     @Test
     public void getComments_userNotPerformsTask_throwsInvalidTaskIdException() {
-        User user = createUser();
-        Task task = createTask(user, null);
+        User user = createTestUser();
+        Task task = createTestTask(user, null);
+
+        userRepository.saveAndFlush(user);
+        taskRepository.saveAndFlush(task);
 
         Assertions.assertThrows(
                 InvalidTaskIdException.class,
@@ -92,15 +97,20 @@ public class CommentServiceTests {
     @Test
     @Transactional
     public void getComments_createComments_returnsAllComments() {
-        User user = createUser();
-        Task task = createTask(user, user);
+        User user = createTestUser();
+        User user2 = createTestUser();
+        Task task = createTestTask(user, user);
 
-        User user2 = createUser();
+        userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(user2);
+        taskRepository.saveAndFlush(task);
 
         List<Comment> comments = List.of(
-                createComment(user, task),
-                createComment(user2, task)
+                createTestComment(user, task),
+                createTestComment(user2, task)
         );
+
+        commentRepository.saveAllAndFlush(comments);
 
         List<CommentDto> expected = comments.stream()
                 .map(commentMapper::mapCommentToCommentDto)
@@ -114,7 +124,9 @@ public class CommentServiceTests {
 
     @Test
     public void createComment_invalidTaskId_throwsInvalidTaskIdException() {
-        User user = createUser();
+        User user = createTestUser();
+
+        userRepository.saveAndFlush(user);
 
         Assertions.assertThrows(
                 InvalidTaskIdException.class,
@@ -125,11 +137,14 @@ public class CommentServiceTests {
     }
 
     @Test
-    public void createComment_userDoesNotPerformTask_throwsInvalidTaskIdException() {
-        User creator = createUser();
-        User performer = createUser();
+    public void createComment_userNotPerformsTask_throwsInvalidTaskIdException() {
+        User creator = createTestUser();
+        User performer = createTestUser();
+        Task task = createTestTask(creator, creator);
 
-        Task task = createTask(creator, creator);
+        userRepository.saveAndFlush(creator);
+        userRepository.saveAndFlush(performer);
+        taskRepository.saveAndFlush(task);
 
         Assertions.assertThrows(
                 InvalidTaskIdException.class,
@@ -141,9 +156,12 @@ public class CommentServiceTests {
 
     @Test
     @Transactional
-    public void createComment_validRequest_returnsCreateCommentDto() {
-        User user = createUser();
-        Task task = createTask(user, user);
+    public void createComment_userPerformsTask_returnsComment() {
+        User user = createTestUser();
+        Task task = createTestTask(user, user);
+
+        userRepository.saveAndFlush(user);
+        taskRepository.saveAndFlush(task);
 
         CommentDto result = commentService.createComment(
                 user,
@@ -157,43 +175,5 @@ public class CommentServiceTests {
                 .orElseThrow();
 
         Assertions.assertEquals(result, commentMapper.mapCommentToCommentDto(comment));
-    }
-
-    private User createUser() {
-        User user = User.builder()
-                .email("user" + UUID.randomUUID() + "@user")
-                .password("1234")
-                .build();
-
-        userRepository.saveAndFlush(user);
-
-        return user;
-    }
-
-    private Task createTask(User creator, User performer) {
-        Task task = Task.builder()
-                .title("Task title")
-                .description("Task description")
-                .status(Status.PENDING)
-                .priority(Priority.HIGH)
-                .creator(creator)
-                .performer(performer)
-                .build();
-
-        taskRepository.saveAndFlush(task);
-
-        return task;
-    }
-
-    private Comment createComment(User author, Task task) {
-        Comment comment = Comment.builder()
-                .text("Comment text")
-                .author(author)
-                .task(task)
-                .build();
-
-        commentRepository.saveAndFlush(comment);
-
-        return comment;
     }
 }
