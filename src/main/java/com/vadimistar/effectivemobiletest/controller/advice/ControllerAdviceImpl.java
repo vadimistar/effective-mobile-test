@@ -50,6 +50,12 @@ public class ControllerAdviceImpl {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDto);
     }
 
+    @ExceptionHandler(InvalidTaskIdException.class)
+    public ResponseEntity<ErrorDto> handleInvalidTaskIdException(InvalidTaskIdException e) {
+        ErrorDto errorDto = new ErrorDto(e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDto);
+    }
+
     @ExceptionHandler(InvalidPerformerIdException.class)
     public ResponseEntity<ErrorDto> handleInvalidPerformerIdException(InvalidPerformerIdException e) {
         ErrorDto errorDto = new ErrorDto(e.getMessage());
