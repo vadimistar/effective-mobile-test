@@ -76,6 +76,7 @@ public class AdminTaskServiceImpl implements AdminTaskService {
     }
 
     @Override
+    @Transactional
     public AdminTaskDto deleteTask(long taskId) {
         AdminTaskDto adminTaskDto = getTask(taskId);
 
