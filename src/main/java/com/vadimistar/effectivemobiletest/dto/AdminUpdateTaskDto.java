@@ -2,7 +2,7 @@ package com.vadimistar.effectivemobiletest.dto;
 
 import com.vadimistar.effectivemobiletest.entity.domain.Priority;
 import com.vadimistar.effectivemobiletest.entity.domain.Status;
-import com.vadimistar.effectivemobiletest.validation.NullOrNotBlank;
+import com.vadimistar.effectivemobiletest.util.NullOrNotBlank;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

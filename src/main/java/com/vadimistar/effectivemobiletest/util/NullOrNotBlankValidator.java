@@ -1,4 +1,4 @@
-package com.vadimistar.effectivemobiletest.validation;
+package com.vadimistar.effectivemobiletest.util;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
