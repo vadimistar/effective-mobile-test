@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -68,6 +69,12 @@ public class ControllerAdviceImpl {
 
         log.error("Invalid request format ({}): {}", e.getClass().toString(), e.getMessage());
         ErrorDto errorDto = new ErrorDto("Неверный формат запроса");
+        return ResponseEntity.badRequest().body(errorDto);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorDto> handleBadCredentialsException() {
+        ErrorDto errorDto = new ErrorDto("Неверный email или пароль");
         return ResponseEntity.badRequest().body(errorDto);
     }
 
