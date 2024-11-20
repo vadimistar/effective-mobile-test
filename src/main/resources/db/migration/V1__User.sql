@@ -1,4 +1,4 @@
-CREATE TABLE `em-test-db`.users
+CREATE TABLE users
 (
     id       BIGINT AUTO_INCREMENT NOT NULL,
     email    VARCHAR(255) NULL,
@@ -7,5 +7,5 @@ CREATE TABLE `em-test-db`.users
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
 
-ALTER TABLE `em-test-db`.users
+ALTER TABLE users
     ADD CONSTRAINT uc_users_email UNIQUE (email);

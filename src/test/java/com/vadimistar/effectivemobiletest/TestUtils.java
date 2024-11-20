@@ -15,8 +15,7 @@ import java.util.UUID;
 public class TestUtils {
 
     public static MySQLContainer<?> createMySQLContainer() {
-        return new MySQLContainer<>("mysql:8.0")
-                .withDatabaseName("em-test-db");
+        return new MySQLContainer<>("mysql:8.0");
     }
 
     public static void fillMySQLProperties(DynamicPropertyRegistry registry, MySQLContainer<?> mysqlContainer) {
