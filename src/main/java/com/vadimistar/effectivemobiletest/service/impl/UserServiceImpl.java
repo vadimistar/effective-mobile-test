@@ -26,6 +26,7 @@ import static com.vadimistar.effectivemobiletest.util.EnvironmentUtils.isProfile
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
