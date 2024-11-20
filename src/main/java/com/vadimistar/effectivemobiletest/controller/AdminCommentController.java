@@ -31,7 +31,7 @@ public class AdminCommentController {
 
     private final AdminCommentService adminCommentService;
 
-    @Operation(summary = "Получить комментарии", description = "Получить комментарии под определенным заданием")
+    @Operation(summary = "Получить комментарии", description = "Получить комментарии под определенным задачей")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Список с комментариями", content = {
                     @Content(array = @ArraySchema(
@@ -46,7 +46,7 @@ public class AdminCommentController {
         return adminCommentService.getComments(taskId, pageable);
     }
 
-    @Operation(summary = "Написать комментарий", description = "Написать комментарий под определенным заданием")
+    @Operation(summary = "Написать комментарий", description = "Написать комментарий под определенным задачей")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Комментарий, который написал пользователь", content = {
                     @Content(schema = @Schema(implementation = CommentDto.class), mediaType = "application/json")

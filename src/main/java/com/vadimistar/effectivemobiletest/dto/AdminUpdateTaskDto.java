@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "Запрос на изменение задания")
+@Schema(description = "Запрос на изменение задачиия")
 @Data
 @Builder
 @NoArgsConstructor

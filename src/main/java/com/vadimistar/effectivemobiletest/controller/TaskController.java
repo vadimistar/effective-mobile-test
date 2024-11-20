@@ -31,24 +31,24 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    @Operation(summary = "Получить задание", description = "Получить задание по ID. Для этого пользователь должен быть исполнителем этого задания")
+    @Operation(summary = "Получить задачу", description = "Получить задачу по ID. Для этого пользователь должен быть исполнителем этой задачи")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Задание", content = {
+            @ApiResponse(responseCode = "200", description = "задача", content = {
                     @Content(schema = @Schema(implementation = TaskDto.class), mediaType = "application/json")
             }),
-            @ApiResponse(responseCode = "404", description = "Задание не найдено", content = {
+            @ApiResponse(responseCode = "404", description = "задача не найдено", content = {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
     })
     @GetMapping("/task/{id}")
     public TaskDto getTask(@AuthenticationPrincipal User user,
-                           @Parameter(description = "ID задания") @PathVariable long id) {
+                           @Parameter(description = "ID задачи") @PathVariable long id) {
         return taskService.getTask(user, id);
     }
 
-    @Operation(summary = "Получить задания", description = "Получить задания, которые исполняет пользователь")
+    @Operation(summary = "Получить задачи", description = "Получить задачи, которые исполняет пользователь")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Список с заданиями", content = {
+            @ApiResponse(responseCode = "200", description = "Список с задачами", content = {
                     @Content(array = @ArraySchema(
                             schema = @Schema(implementation = TaskDto.class)
                     ), mediaType = "application/json")
@@ -61,15 +61,15 @@ public class TaskController {
         return taskService.getTasks(user, pageable);
     }
 
-    @Operation(summary = "Обновить задание", description = "Обновить задание по ID. Для этого пользователь должен быть исполнителем этого задания")
+    @Operation(summary = "Обновить задачу", description = "Обновить задачу по ID. Для этого пользователь должен быть исполнителем этой задачи")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Обновленное задание", content = {
+            @ApiResponse(responseCode = "200", description = "Обновленная задача", content = {
                     @Content(schema = @Schema(implementation = TaskDto.class), mediaType = "application/json")
             }),
     })
     @PatchMapping("/task/{id}")
     public TaskDto updateTask(@AuthenticationPrincipal User user,
-                              @Parameter(description = "ID задания") @PathVariable long id,
+                              @Parameter(description = "ID задачи") @PathVariable long id,
                               @Valid @RequestBody UpdateTaskDto updateTaskDto) {
         return taskService.updateTask(user, id, updateTaskDto);
     }

@@ -30,7 +30,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @Operation(summary = "Получить комментарии", description = "Получить комментарии под определенным заданием. Для этого пользователь должен быть исполнителем этого задания")
+    @Operation(summary = "Получить комментарии", description = "Получить комментарии под определенным задачей. Для этого пользователь должен быть исполнителем этой задачи")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Список с комментариями", content = {
                     @Content(array = @ArraySchema(
@@ -41,12 +41,12 @@ public class CommentController {
     @PageableParameter
     @GetMapping("/task/{taskId}/comments")
     public List<CommentDto> getComments(@AuthenticationPrincipal User user,
-                                        @Parameter(description = "ID задания") @PathVariable long taskId,
+                                        @Parameter(description = "ID задачи") @PathVariable long taskId,
                                         @Parameter(hidden = true) Pageable pageable) {
         return commentService.getComments(user, taskId, pageable);
     }
 
-    @Operation(summary = "Написать комментарий", description = "Написать комментарий под определенным заданием. Для этого пользователь должен быть исполнителем этого задания")
+    @Operation(summary = "Написать комментарий", description = "Написать комментарий под определенным задачей. Для этого пользователь должен быть исполнителем этой задачи")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Комментарий, который написал пользователь", content = {
                     @Content(schema = @Schema(implementation = CommentDto.class), mediaType = "application/json")
@@ -54,7 +54,7 @@ public class CommentController {
     })
     @PostMapping("/task/{taskId}/comment")
     public CommentDto createComment(@AuthenticationPrincipal User user,
-                                    @Parameter(description = "ID задания") @PathVariable long taskId,
+                                    @Parameter(description = "ID задачи") @PathVariable long taskId,
                                     @Valid @RequestBody CreateCommentDto createCommentDto) {
         return commentService.createComment(user, taskId, createCommentDto);
     }

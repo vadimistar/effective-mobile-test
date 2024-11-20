@@ -31,12 +31,12 @@ public class AdminTaskController {
 
     private final AdminTaskService adminTaskService;
 
-    @Operation(summary = "Получить задание", description = "Получить задание по ID")
+    @Operation(summary = "Получить задачу", description = "Получить задачу по ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Задание", content = {
+            @ApiResponse(responseCode = "200", description = "Задача", content = {
                     @Content(schema = @Schema(implementation = AdminTaskDto.class), mediaType = "application/json")
             }),
-            @ApiResponse(responseCode = "404", description = "Задание не найдено", content = {
+            @ApiResponse(responseCode = "404", description = "Задача не найдена", content = {
                     @Content(schema = @Schema(implementation = ErrorDto.class), mediaType = "application/json")
             }),
     })
@@ -45,9 +45,9 @@ public class AdminTaskController {
         return adminTaskService.getTask(taskId);
     }
 
-    @Operation(summary = "Получить задания", description = "Получить задания по ID создателя и ID исполнителя")
+    @Operation(summary = "Получить задачи", description = "Получить задачи по ID создателя и ID исполнителя")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Список с заданиями", content = {
+            @ApiResponse(responseCode = "200", description = "Список с задачами", content = {
                     @Content(array = @ArraySchema(
                             schema = @Schema(implementation = AdminTaskDto.class)
                     ), mediaType = "application/json")
@@ -60,9 +60,9 @@ public class AdminTaskController {
         return adminTaskService.getTasks(adminGetTasksDto, pageable);
     }
 
-    @Operation(summary = "Создать задание")
+    @Operation(summary = "Создать задачу")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Созданное задание", content = {
+            @ApiResponse(responseCode = "200", description = "Созданная задача", content = {
                     @Content(schema = @Schema(implementation = AdminTaskDto.class), mediaType = "application/json")
             }),
     })
@@ -72,9 +72,9 @@ public class AdminTaskController {
         return adminTaskService.createTask(user, adminCreateTaskDto);
     }
 
-    @Operation(summary = "Изменить задание", description = "Изменить задание, возможно указать только определенные поля для изменения")
+    @Operation(summary = "Изменить задачу", description = "Изменить задачу, возможно указать только определенные поля для изменения")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Измененное задание", content = {
+            @ApiResponse(responseCode = "200", description = "Измененная задача", content = {
                     @Content(schema = @Schema(implementation = AdminTaskDto.class), mediaType = "application/json")
             }),
     })
@@ -84,14 +84,14 @@ public class AdminTaskController {
         return adminTaskService.updateTask(id, adminUpdateTaskDto);
     }
 
-    @Operation(summary = "Удалить задание")
+    @Operation(summary = "Удалить задачу")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Удаленное задание", content = {
+            @ApiResponse(responseCode = "200", description = "Удаленная задача", content = {
                     @Content(schema = @Schema(implementation = AdminTaskDto.class), mediaType = "application/json")
             }),
     })
     @DeleteMapping("/task/{id}")
-    public AdminTaskDto deleteTask(@Parameter(description = "ID задания") @PathVariable long id) {
+    public AdminTaskDto deleteTask(@Parameter(description = "ID задачи") @PathVariable long id) {
         return adminTaskService.deleteTask(id);
     }
 }

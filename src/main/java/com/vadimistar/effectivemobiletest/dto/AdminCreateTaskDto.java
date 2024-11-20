@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
-@Schema(description = "Запрос на создание задания")
+@Schema(description = "Запрос на создание задачи")
 @Data
 @Builder
 public class AdminCreateTaskDto {
