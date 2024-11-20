@@ -8,6 +8,7 @@ import com.vadimistar.effectivemobiletest.exception.TaskNotFoundException;
 import com.vadimistar.effectivemobiletest.mapper.TaskMapper;
 import com.vadimistar.effectivemobiletest.repository.TaskRepository;
 import com.vadimistar.effectivemobiletest.service.TaskService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public TaskDto updateTask(User user, long taskId, UpdateTaskDto updateTaskDto) {
         Task task = taskRepository.findByIdAndPerformerId(taskId, user.getId())
                 .orElseThrow(() -> new TaskNotFoundException("Task with this id is not found: " + taskId));

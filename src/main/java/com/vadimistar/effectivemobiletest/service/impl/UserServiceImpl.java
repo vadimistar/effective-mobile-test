@@ -10,6 +10,7 @@ import com.vadimistar.effectivemobiletest.mapper.UserMapper;
 import com.vadimistar.effectivemobiletest.repository.UserRepository;
 import com.vadimistar.effectivemobiletest.service.JwtService;
 import com.vadimistar.effectivemobiletest.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
 
     @Override
+    @Transactional
     public UserDto registerUser(RegisterUserDto registerUserDto) {
         if (userRepository.existsByEmail(registerUserDto.getEmail())) {
             throw new EmailAlreadyExistsException("Пользователь с этим email уже существует");

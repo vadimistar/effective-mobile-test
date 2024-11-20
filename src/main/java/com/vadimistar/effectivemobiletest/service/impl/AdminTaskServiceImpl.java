@@ -12,6 +12,7 @@ import com.vadimistar.effectivemobiletest.mapper.AdminTaskMapper;
 import com.vadimistar.effectivemobiletest.repository.TaskRepository;
 import com.vadimistar.effectivemobiletest.repository.UserRepository;
 import com.vadimistar.effectivemobiletest.service.AdminTaskService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ public class AdminTaskServiceImpl implements AdminTaskService {
     }
 
     @Override
+    @Transactional
     public AdminTaskDto createTask(User user, AdminCreateTaskDto adminCreateTaskDto) {
         Task task = adminTaskMapper.mapAdminCreateTaskDtoToTask(adminCreateTaskDto);
 
@@ -60,6 +62,7 @@ public class AdminTaskServiceImpl implements AdminTaskService {
     }
 
     @Override
+    @Transactional
     public AdminTaskDto updateTask(long taskId, AdminUpdateTaskDto adminUpdateTaskDto) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Задача с этим ID не найдена: " + taskId));

@@ -10,6 +10,7 @@ import com.vadimistar.effectivemobiletest.mapper.CommentMapper;
 import com.vadimistar.effectivemobiletest.repository.CommentRepository;
 import com.vadimistar.effectivemobiletest.repository.TaskRepository;
 import com.vadimistar.effectivemobiletest.service.AdminCommentService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class AdminCommentServiceImpl implements AdminCommentService {
     }
 
     @Override
+    @Transactional
     public CommentDto createComment(User user, long taskId, CreateCommentDto createCommentDto) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new InvalidTaskIdException("Неверный ID задачи: " + taskId));
