@@ -25,7 +25,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDto getTask(User user, long taskId) {
         Task task = taskRepository.findByIdAndPerformerId(taskId, user.getId())
-                .orElseThrow(() -> new TaskNotFoundException("Task with this id is not found: " + taskId));
+                .orElseThrow(() -> new TaskNotFoundException("Задача с этим ID не найдена: " + taskId));
 
         return taskMapper.mapTaskToTaskDto(task);
     }
@@ -43,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public TaskDto updateTask(User user, long taskId, UpdateTaskDto updateTaskDto) {
         Task task = taskRepository.findByIdAndPerformerId(taskId, user.getId())
-                .orElseThrow(() -> new TaskNotFoundException("Task with this id is not found: " + taskId));
+                .orElseThrow(() -> new TaskNotFoundException("Задача с этим ID не найдена: " + taskId));
 
         taskMapper.updateTask(task, updateTaskDto);
         taskRepository.saveAndFlush(task);
