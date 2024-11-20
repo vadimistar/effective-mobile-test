@@ -45,6 +45,8 @@ public class AdminCommentServiceImpl implements AdminCommentService {
         comment.setTask(task);
         comment.setAuthor(user);
 
+        commentRepository.saveAndFlush(comment);
+
         return commentMapper.mapCommentToCommentDto(comment);
     }
 }
